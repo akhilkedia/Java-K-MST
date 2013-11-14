@@ -3,29 +3,38 @@ package kMST;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public class Component<CE, V> {
+public class Component<E, V> {
 	public double potential;
 	public double dual;
 	public boolean haschildren;
-	public Component<CE, V> child1, child2;
+	public double timeofformation;
+	public double respotenform;
+	public double child1dual;
+	public double child2dual;
+	public Component<E, V> child1, child2;
 	public V vertex;
-	public CE edge;
-	public LinkedList<CE> edgelist;
+	public ComplexEdge<E> edge;
+	public LinkedList<ComplexEdge<E>> edgelist;
 	public LinkedList<V> vertexlist;
 	public HashMap<V, Integer> vertexmap;
 	public int colour; // 0 = white, 2 = black
 
-	public Component(Component<CE, V> Component1, Component<CE, V> Component2,
-			CE joiningedge) {
+	public Component(Component<E, V> Component1, Component<E, V> Component2,
+			ComplexEdge<E> joiningedge, double time) {
 		child1 = Component1;
 		child2 = Component2;
 		edge = joiningedge;
 		haschildren = true;
+		joiningedge.timeoftight = time;
 		dual = 0;
 		vertex = null;
 		potential = Component1.potential + Component2.potential;
+		child1dual = Component1.dual;
+		child2dual = Component2.dual;
+		respotenform = potential;
 		colour = 0;
-		edgelist = new LinkedList<CE>();
+		timeofformation = time;
+		edgelist = new LinkedList<ComplexEdge<E>>();
 		edgelist.addAll(Component1.edgelist);
 		edgelist.addAll(Component2.edgelist);
 		edgelist.add(joiningedge);
@@ -37,13 +46,17 @@ public class Component<CE, V> {
 		vertexlist.addAll(Component2.vertexlist);
 	}
 
-	public Component(V startingvertex, double startingpotential) {
+	public Component(V startingvertex, double startingpotential,double time) {
 		potential = startingpotential;
+		timeofformation = time;
+		respotenform = potential;
+		child1dual = 0;
+		child2dual = 0;
 		dual = 0;
 		haschildren = false;
 		colour = 0;
 		vertex = startingvertex;
-		edgelist = new LinkedList<CE>();
+		edgelist = new LinkedList<ComplexEdge<E>>();
 		vertexlist = new LinkedList<V>();
 		vertexlist.add(vertex);
 		vertexmap = new HashMap<V,Integer>(1);
