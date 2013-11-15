@@ -12,7 +12,7 @@ public class ComplexEdge<E,V> {
 		timeoftight = -1;
 	}
 	public String toString(){
-		String s = "("+timeoftight+" "+edge.toString()+")";
+		String s = "("+timeoftight+" "+getkink()+" "+edge.toString()+")";
 		return s;
 	}
 	//no idea if this is correct - And might have crazy lots of division by zero errors.
@@ -27,7 +27,7 @@ public class ComplexEdge<E,V> {
 			else
 				return potenchange2;
 		}
-		else if(joinedcomp.child1.colour==1){
+		else if(joinedcomp.child1.colour==2){
 			potenchange1 = -(joinedcomp.timeofformation-joinedcomp.child1.timeofformation-joinedcomp.child1.dual)/(joinedcomp.dtimeofform-joinedcomp.child1.dtimeofform-joinedcomp.child1.dfinaldual);
 			return potenchange1;
 		}
@@ -36,10 +36,16 @@ public class ComplexEdge<E,V> {
 			return potenchange2;
 		}
 	}
+	public double getkinktime(){
+		return (joinedcomp.timeofformation+(joinedcomp.dtimeofform*getkink()));
+	}
 	//only gives correct answer is one of them is black.
 	public double getthreshhold(){
 		double potenchange1 = 0;
-		potenchange1 = joinedcomp.respotenform/joinedcomp.drespotenform;
+		potenchange1 = -joinedcomp.respotenform/joinedcomp.drespotenform;
 		return potenchange1;
+	}
+	public double getthreshholdtime(){
+		return (joinedcomp.timeofformation+(joinedcomp.dtimeofform*getthreshhold()));
 	}
 }
