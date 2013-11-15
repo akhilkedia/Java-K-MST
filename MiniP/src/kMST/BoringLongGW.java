@@ -5,15 +5,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
-import org.jgrapht.graph.AbstractBaseGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
-
 //Highly untested. Use it for return types and basic flow.
 
 public class BoringLongGW<E, V> {
 	public SimpleWeightedGraph<V, E> graph;
 	public SimpleWeightedGraph<V, E> forest;
-	public LinkedList<ComplexEdge<E>> edgelist = new LinkedList<ComplexEdge<E>>();
+	public LinkedList<ComplexEdge<E,V>> edgelist = new LinkedList<ComplexEdge<E,V>>();
 	public LinkedList<Component<E, V>> componentlist = new LinkedList<Component<E, V>>();
 	public double time;
 	public HashMap<V, Component<E, V>> verttocomp;
@@ -24,7 +22,7 @@ public class BoringLongGW<E, V> {
 	public Set<V> vertices;
 	public Set<E> edges;
 	public LinkedList<Double> time_increments = new LinkedList<Double>();
-	public LinkedList<ComplexEdge<E>> edge_orders = new LinkedList<ComplexEdge<E>>();
+	public LinkedList<ComplexEdge<E,V>> edge_orders = new LinkedList<ComplexEdge<E,V>>();
 	public LinkedList<Component<E, V>> black_orders = new LinkedList<Component<E, V>>();
 	
 	//The main function to call
@@ -57,19 +55,19 @@ public class BoringLongGW<E, V> {
 		Iterator<E> iter1 = edges.iterator();
 		for (int i = 0; i < numofedges; i++) {
 			E tempedge = iter1.next();
-			ComplexEdge<E> cedge = new ComplexEdge<E>(tempedge, graph.getEdgeWeight(tempedge));
+			ComplexEdge<E,V> cedge = new ComplexEdge<E,V>(tempedge, graph.getEdgeWeight(tempedge));
 			edgelist.add(cedge);
 		}
 	}
 
 	public boolean increasetime() {
 		double edgetime = Double.MAX_VALUE;
-		ComplexEdge<E> minedge = null; // i need to change the null, right?
+		ComplexEdge<E,V> minedge = null; // i need to change the null, right?
 
 		// find min edge
-		Iterator<ComplexEdge<E>> iter = edgelist.listIterator();
+		Iterator<ComplexEdge<E,V>> iter = edgelist.listIterator();
 		while (iter.hasNext()) {
-			ComplexEdge<E> cedge = iter.next();
+			ComplexEdge<E,V> cedge = iter.next();
 			V vertex1 = graph.getEdgeSource(cedge.edge);
 			V vertex2 = graph.getEdgeTarget(cedge.edge);
 			int colour1 = verttocomp.get(vertex1).colour;
@@ -113,9 +111,9 @@ public class BoringLongGW<E, V> {
 			time_increments.addLast(time);
 
 
-			Iterator<ComplexEdge<E>> iter3 = edgelist.listIterator();
+			Iterator<ComplexEdge<E,V>> iter3 = edgelist.listIterator();
 			while (iter3.hasNext()) {
-				ComplexEdge<E> cedge = iter3.next();
+				ComplexEdge<E,V> cedge = iter3.next();
 				V vertex1 = graph.getEdgeSource(cedge.edge);
 				V vertex2 = graph.getEdgeTarget(cedge.edge);
 				int colour1 = verttocomp.get(vertex1).colour;
@@ -165,9 +163,9 @@ public class BoringLongGW<E, V> {
 
 			Component<E, V> joinedcomp = new Component<E, V>(comp1, comp2, minedge, time);
 			// remove edges between these components
-			Iterator<ComplexEdge<E>> iter3 = edgelist.listIterator();
+			Iterator<ComplexEdge<E,V>> iter3 = edgelist.listIterator();
 			while (iter3.hasNext()) {
-				ComplexEdge<E> cedge = iter3.next();
+				ComplexEdge<E,V> cedge = iter3.next();
 				V vertex1 = graph.getEdgeSource(cedge.edge);
 				V vertex2 = graph.getEdgeTarget(cedge.edge);
 				int colour1 = verttocomp.get(vertex1).colour;
@@ -176,6 +174,12 @@ public class BoringLongGW<E, V> {
 					cedge.potential -= 2 * edgetime;
 				else if (colour1 == 0 || colour2 == 0)
 					cedge.potential -= edgetime;
+				//will make dfinaldual for the joiningedge equal to zero.
+				if(verttocomp.get(vertex1) == comp1||verttocomp.get(vertex2) == comp1)
+					cedge.dsumdual += comp1.dfinaldual;
+				if(verttocomp.get(vertex1) == comp2||verttocomp.get(vertex2) == comp2)
+					cedge.dsumdual += comp2.dfinaldual;
+				
 				if ((verttocomp.get(vertex1) == comp1 && verttocomp.get(vertex2) == comp2)
 						|| (verttocomp.get(vertex2) == comp1 && verttocomp.get(vertex1) == comp2)) {
 					iter3.remove();
