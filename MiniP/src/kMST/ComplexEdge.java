@@ -27,7 +27,7 @@ public class ComplexEdge<E,V> {
 			else
 				return potenchange2;
 		}
-		else if(joinedcomp.child1.colour==1){
+		else if(joinedcomp.child1.colour==2){
 			potenchange1 = -(joinedcomp.timeofformation-joinedcomp.child1.timeofformation-joinedcomp.child1.dual)/(joinedcomp.dtimeofform-joinedcomp.child1.dtimeofform-joinedcomp.child1.dfinaldual);
 			return potenchange1;
 		}
@@ -35,6 +35,14 @@ public class ComplexEdge<E,V> {
 			potenchange2 = -(joinedcomp.timeofformation-joinedcomp.child2.timeofformation-joinedcomp.child2.dual)/(joinedcomp.dtimeofform-joinedcomp.child2.dtimeofform-joinedcomp.child2.dfinaldual);
 			return potenchange2;
 		}
+	}
+	
+	public double getkinktime(){
+		return 1.0;
+	}
+	
+	public double getthresholdtime(){
+		return 1.0;
 	}
 	//only gives correct answer is one of them is black.
 	public double getthreshhold(){

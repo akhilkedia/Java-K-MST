@@ -7,10 +7,9 @@ public class Test {
 	
 	public static void main(String[] args) {
 		BuildGraph();
-		double inipot = 3.06;
+		double inipot = 2.0;
 		BoringLongGW<TestEdge,TestVertex> testgw = new BoringLongGW<TestEdge,TestVertex>(test,TestEdge.class, inipot);
-		testgw.runGW();
-		testgw.Debug();
+		testgw.QQMaster(2.0, 3.0, 4);
 
 	}
 	
