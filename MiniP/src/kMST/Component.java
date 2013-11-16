@@ -69,8 +69,7 @@ public class Component<E, V> {
 			child2.dfinaldual = child2.drespotenform;
 		
 		//now setting drespotenform
-		drespotenform = child1.drespotenform - child1.dfinaldual + child1.drespotenform - child1.dfinaldual;
-		
+		drespotenform = (child1.drespotenform - child1.dfinaldual) + (child2.drespotenform - child2.dfinaldual);
 	}
 
 	public Component(V startingvertex, double startingpotential,double time) {

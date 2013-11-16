@@ -409,7 +409,7 @@ public class BoringLongGW<E, V> {
 			runGW();
 			double threshold = CriticalPoints[1] - epsilon - edge_orders.get(edgeindex - 1).getthreshhold();
 			CriticalPoints[2] = threshold;
-			Timings[2] = edge_orders.get(edgeindex - 1).getthresholdtime();
+			Timings[2] = edge_orders.get(edgeindex - 1).getthreshholdtime();
 			
 			//Run GW to find right side time
 			ClearAll(forestL,max-epsilon);
